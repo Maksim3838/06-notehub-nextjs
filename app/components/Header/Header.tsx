@@ -1,18 +1,18 @@
 import Link from "next/link";
-
+import css from "../Header.module.css"
 
 function Header() {
     return<header className={css.header}>
-  <link href="/" aria-label="Home">
+  <Link href="/" aria-label="Home">
     NoteHub
-  </link>
+  </Link>
   <nav aria-label="Main Navigation">
     <ul className={css.navigation}>
       <li>
-        <link href="/">Home</link>
+        <Link href="/">Home</Link>
       </li>
       <li>
-        <link href="/notes">Notes</link>
+        <Link href="/notes">Notes</Link>
       </li>
     </ul>
   </nav>

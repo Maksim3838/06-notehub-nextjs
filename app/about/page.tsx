@@ -1,4 +1,7 @@
-function About() {
+import css from "./Home.module.css"
+
+
+function Home() {
     return<main>
   <div className={css.container}>
     <h1 className={css.title}>Welcome to NoteHub</h1>
@@ -17,4 +20,4 @@ function About() {
 </main>
 }
 
-export default About ;
+export default Home ;
