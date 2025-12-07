@@ -1,22 +1,21 @@
 import { useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import NoteList from "../NoteList/NoteList";
+import NoteList from "../../components/NoteList/NoteList";
 import css from "./App.module.css";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
-import SearchBox from "../SearchBox/SearchBox";
+import SearchBox from "../../components/SearchBox/SearchBox";
 import { fetchNotes } from "../../services/noteService";
-import Modal from "../Modal/Modal";
-import NoteForm from "../NoteForm/NoteForm";
-import Pagination from "../Pagination/Pagination";
+import Modal from "../../components/Modal/Modal";
+import NoteForm from "../../components/NoteForm/NoteForm";
+import Pagination from "../../components/Pagination/Pagination";
 
 export default function App() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-  // const debouncedSearchQuery = useDebouncedCallback(setSearchQuery, 300);
-  const debouncedSearchQuery = useDebouncedCallback((value: string) => {
+   const debouncedSearchQuery = useDebouncedCallback((value: string) => {
     setSearchQuery(value);
     setCurrentPage(1);
   }, 300);
