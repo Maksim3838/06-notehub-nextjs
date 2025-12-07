@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getNotes } from '../../lib/api';
 
 export default function NotesClient() {
-  const { data: notes, isLoading, isError, error } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ['notes'],
     queryFn: getNotes,
   });
@@ -12,9 +12,11 @@ export default function NotesClient() {
   if (isLoading) return <div>Loading notes…</div>;
   if (isError) return <div>Error: {(error as Error).message}</div>;
 
+  const notes = data?.notes ?? [];
+
   return (
     <ul>
-      {notes!.map(note => (
+      {notes.map(note => (
         <li key={note.id}>{note.title}</li>
       ))}
     </ul>
