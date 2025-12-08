@@ -1,25 +1,70 @@
 'use client';
 
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { getNotes } from '../../lib/api';
+import { getNotes, NoteListResponse } from '../../lib/api';
+
+import { debounce } from '../notes/debounce'; 
+
+import SearchBox from '@/components/SearchBox/SearchBox';
+import Pagination from '@/components/Pagination/Pagination';
+import Modal from '@/components/Modal/Modal';
+import NoteForm from '@/components/NoteForm/NoteForm';
+import NoteList from '@/components/NoteList/NoteList';
 
 export default function NotesClient() {
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ['notes'],
-    queryFn: getNotes,
-  });
+   const [page, setPage] = useState<number>(1);
+  const [search, setSearch] = useState<string>('');
+  const [debouncedSearch, setDebouncedSearch] = useState<string>('');
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-  if (isLoading) return <div>Loading notes…</div>;
-  if (isError) return <div>Error: {(error as Error).message}</div>;
+   const debounced = debounce((value: string) => {
+  setDebouncedSearch(value);
+  setPage(1);
+}, 400);
 
-  const notes = data?.notes ?? [];
 
-  return (
-    <ul>
-      {notes.map(note => (
-        <li key={note.id}>{note.title}</li>
-      ))}
-    </ul>
+  const handleSearchChange = (value: string) => {
+    setSearch(value);
+    debounced(value);
+  };
+
+  const { data, isLoading } = useQuery<NoteListResponse, Error>({
+  queryKey: ['notes', page, debouncedSearch],
+  queryFn: () => getNotes(page, debouncedSearch),
+  keepPreviousData: true,
+});
+
+
+
+    const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
+    const notes = data?.notes ?? [];
+  const totalPages = data?.totalPages ?? 1;
+
+    return (
+    <main>
+            <SearchBox value={search} onChange={handleSearchChange} />
+
+           <button onClick={openModal}>Add Note</button>
+
+            {isLoading && <p>Loading notes…</p>}
+      {isError && <p>Error: {error?.message}</p>}
+
+            {!isLoading && !isError && <NoteList notes={notes} />}
+      
+      <Pagination
+        page={page}
+        totalPages={totalPages}
+        onPageChange={setPage}
+        isLoading={isFetching}
+      />
+
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <NoteForm onSuccess={closeModal} />
+      </Modal>
+    </main>
   );
 }
 
