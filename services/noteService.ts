@@ -16,17 +16,17 @@ export interface NotesResponse {
 const api = axios.create({
   baseURL: "https://notehub-public.goit.study/api",
   headers: {
-    Authorization: `Bearer ${import.meta.env.VITE_NOTEHUB_TOKEN}`,
+    Authorization: `Bearer ${process.env.NEXT_PUBLIC_NOTEHUB_TOKEN}`,
     "Content-Type": "application/json",
   },
 });
 
 export const fetchNotes = async (
   page = 1,
-  search = " "
+  search = ""
 ): Promise<NotesResponse> => {
-  const res = await api.get<NotesResponse>(`/notes`, {
-    params: {page, search, },
+  const res = await api.get<NotesResponse>("/notes", {
+    params: { page, search },
   });
 
   return res.data;
