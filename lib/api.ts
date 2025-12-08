@@ -1,14 +1,5 @@
 import axios from 'axios';
-
-export type Note = {
-  id: string;
-  title: string;
-  content: string;
-  category: string;
-  user: string;
-  createdAt: string;
-  updatedAt: string;
-};
+import { Note } from '../types/note';
 
 export type NoteListResponse = {
   notes: Note[];
