@@ -1,13 +1,6 @@
 import axios from "axios";
 import type { Note } from "../types/note";
 
-export type AllowedTag =
-  | "Todo"
-  | "Work"
-  | "Personal"
-  | "Meeting"
-  | "Shopping";
-
 export interface NotesResponse {
   notes: Note[];
   totalPages: number;
@@ -21,14 +14,19 @@ const api = axios.create({
   },
 });
 
-export const fetchNotes = async (
-  page = 1,
-  search = ""
+export const getNotes = async (
+  page: number = 1,
+  search: string = ""
 ): Promise<NotesResponse> => {
   const res = await api.get<NotesResponse>("/notes", {
     params: { page, search },
   });
 
+  return res.data;
+};
+
+export const getSingleNote = async (id: string): Promise<Note> => {
+    const res = await api.get<Note>(`/notes/${id}`);
   return res.data;
 };
 
