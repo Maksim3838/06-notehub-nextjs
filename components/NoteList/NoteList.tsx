@@ -1,3 +1,5 @@
+'use client';
+
 import Link from "next/link";
 import type { Note } from "../../types/note";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
