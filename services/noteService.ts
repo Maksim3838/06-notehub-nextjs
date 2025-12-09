@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { Note } from '../types/note';
 
+
 export type NoteListResponse = {
   notes: Note[];
   totalPages: number;
