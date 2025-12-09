@@ -1,12 +1,10 @@
 export type AllowedTag = "Todo" | "Work" | "Personal" | "Meeting" | "Shopping";
 
-export type Note = {
+export interface Note {
   id: string;
   title: string;
   content: string;
-  tag: string;
-  user: string;
+  tag: AllowedTag;   
   createdAt: string;
   updatedAt: string;
-};
-
+}
