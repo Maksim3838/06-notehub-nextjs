@@ -1,5 +1,6 @@
 'use client';
 
+import { keepPreviousData } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getNotes, NoteListResponse } from '../../lib/api';
@@ -28,10 +29,10 @@ export default function NotesClient() {
   };
 
   const { data, isLoading, isError, error, isFetching } = useQuery<NoteListResponse, Error>({
-    queryKey: ['notes', page, debouncedSearch],
-    queryFn: () => getNotes(page, debouncedSearch),
-    keepPreviousData: true,
-  });
+  queryKey: ['notes', page, debouncedSearch],
+  queryFn: () => getNotes(page, debouncedSearch),
+  placeholderData: keepPreviousData,
+});
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);

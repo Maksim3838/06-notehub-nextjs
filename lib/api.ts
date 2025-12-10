@@ -10,19 +10,29 @@ const myToken = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
 
 axios.defaults.baseURL = 'https://next-v1-notes-api.goit.study';
 
-export const getNotes = async (cstegoryId?: string) => {
-  
-  const res = await axios.get('/notes', {
-    params: { cstegoryId },
-    headers: {
-      Authorization: `Bearer ${myToken}`,
-    },
+const api = axios.create({
+  baseURL: 'https://next-v1-notes-api.goit.study',
+  headers: {
+    Authorization: `Bearer ${myToken}`,
+    'Content-Type': 'application/json',
+  },
+});
+
+export const getNotes = async (categoryId?: string): Promise<NoteListResponse> => {
+  const response = await api.get<NoteListResponse>('/notes', {
+    params: { categoryId },
   });
-  return res.data;
+
+   return response.data;
 };
 
-export async function getSingleNote(id: string) {
-  const response = await axios.get<Note>(`/notes/${id}`);
+export const createNote = async (note: Partial<Note>): Promise<Note> => {
+  const response = await api.post<Note>('/notes', note);
   return response.data;
-}
+};
+
+export const deleteNote = async (id: string): Promise<void> => {
+  await api.delete(`/notes/${id}`);
+};
+
 
