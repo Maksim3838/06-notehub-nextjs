@@ -1,3 +1,7 @@
+import css from "../components/Home/Home.module.css"
+
+
+function Notes () {
 <main>
   <div className={css.container}>
     <h1 className={css.title}>Welcome to NoteHub</h1>
@@ -14,3 +18,5 @@
     </p>
   </div>
 </main>
+}
+export default Notes ;
