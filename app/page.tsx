@@ -1,7 +1,7 @@
 import css from "../app/notes/Home.module.css"
 
 export default function Home() {
-  return 
+  return (
   <main>
   <div className={css.container}>
     <h1 className={css.title}>Welcome to NoteHub</h1>
@@ -17,7 +17,7 @@ export default function Home() {
       and productivity.
     </p>
   </div>
-</main>
+</main>)
 };
 
    
