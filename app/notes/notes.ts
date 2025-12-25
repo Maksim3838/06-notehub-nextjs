@@ -28,3 +28,13 @@ export const fetchNotes = async (
 
   return data;
 };
+
+
+export const deleteNote = async (id: string): Promise<void> => {
+  await api.delete(`/notes/${id}`);
+};
+
+export const getNoteById = async (id: string): Promise<Note> => {
+  const { data } = await api.get(`/notes/${id}`);
+  return data;
+};
