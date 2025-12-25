@@ -1,6 +1,11 @@
 import axios from 'axios';
 import { Note } from '@/types/note';
 
+export type NoteListResponse = {
+  notes: Note[];
+  totalPages: number;
+};
+
 const token = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
 
 const api = axios.create({
@@ -10,7 +15,16 @@ const api = axios.create({
   },
 });
 
-export const getNoteById = async (id: string): Promise<Note> => {
-  const { data } = await api.get(`/notes/${id}`);
+export const fetchNotes = async (
+  page: number,
+  search?: string
+): Promise<NoteListResponse> => {
+  const { data } = await api.get('/notes', {
+    params: {
+      page,
+      search,
+    },
+  });
+
   return data;
 };
