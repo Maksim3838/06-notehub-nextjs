@@ -1,6 +1,6 @@
 import css from "../app/notes/Home.module.css"
 
-export default function Home() {
+export default function NotePage () {
   return (
   <main>
   <div className={css.container}>
