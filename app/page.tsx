@@ -12,7 +12,7 @@ import SearchBox from '../components/SearchBox/SearchBox';
 import Modal from '../components/Modal/Modal';
 import NoteForm from '../components/NoteForm/NoteForm';
 import Pagination from '../components/Pagination/Pagination';
-import { fetchNotes } from '../app/notes/notes';
+import { fetchNotes } from '@/lib/api';
 
 export default function NotesPage() {
    const [searchQuery, setSearchQuery] = useState('');
