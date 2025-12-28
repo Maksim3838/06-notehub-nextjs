@@ -5,7 +5,7 @@ import { useDebouncedCallback } from 'use-debounce';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { Toaster } from 'react-hot-toast';
 
-import css from './Home.module.css';
+import css from '../components/NoteForm/NoteForm.module.css';
 
 import NoteList from '../components/NoteList/NoteList';
 import SearchBox from '../components/SearchBox/SearchBox';
