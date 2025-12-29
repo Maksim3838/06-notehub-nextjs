@@ -1,62 +1,65 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useQuery, keepPreviousData } from '@tanstack/react-query';
-import { useDebouncedCallback } from 'use-debounce';
-import Modal from '@/components/Modal/Modal';
-import NoteList from '@/components/NoteList/NoteList';
-import SearchBox from '@/components/SearchBox/SearchBox';
-import Pagination from '@/components/Pagination/Pagination';
-import { fetchNotes } from '@/lib/api';
-import NoteForm from '@/components/NoteForm/NoteForm';
-import css from '../../components/NotesPage/NotesPage.module.css';
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useDebounce } from "use-debounce";
+import NoteList from "../../components/NoteList/NoteList";
+import css from "./NotesPage.module.css";
+import { fetchNotes } from "../../lib/api";
+import { useState } from "react";
+import Pagination from "../../components/Pagination/Pagination";
+import Modal from "../../components/Modal/Modal";
+import NoteForm from "../../components/NoteForm/NoteForm";
+import SearchBox from "../../components/SearchBox/SearchBox";
 
-export default function NotesClient() {
-  const [currentPage, setCurrentPage] = useState(1);
+function NotesClient() {
+  const [page, setPage] = useState(1);
+  const [query, setQuery] = useState("");
+  const [debouncedQuery] = useDebounce(query, 300);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleCloseModal = () => setIsModalOpen(false);
+  const handleOpenModal = () => setIsModalOpen(true);
 
   const { data } = useQuery({
-    queryKey: ['notes', searchQuery, currentPage],
-    queryFn: () => fetchNotes(currentPage, searchQuery),
+    queryKey: ["notes", debouncedQuery, page],
+    queryFn: () => fetchNotes(debouncedQuery, page),
     placeholderData: keepPreviousData,
+    refetchOnMount: false,
   });
 
-  const toggleModal = () => setIsModalOpen((prev) => !prev);
-  const changeSearchQuery = useDebouncedCallback((newQuery: string) => {
-    setCurrentPage(1);
-    setSearchQuery(newQuery);
-  }, 300);
-
-  const totalPages = data?.totalPages ?? 0;
-  const notes = data?.notes ?? [];
+  const handleSearch = (newValue: string) => {
+    setPage(1);
+    setQuery(newValue);
+  };
 
   return (
     <div className={css.app}>
-      <main>
-        <section>
-          <header className={css.toolbar}>
-            <SearchBox onSearch={changeSearchQuery} value={searchQuery}/>
-            {totalPages > 1 && (
-              <Pagination
-                totalPages={totalPages}
-                currentPage={currentPage}
-                onPageChange={setCurrentPage}
-              />
-            )}
-            <button className={css.button} onClick={toggleModal}>
-              Create note +
-            </button>
-          </header>
-
-          {isModalOpen && (
-            <Modal onClose={toggleModal}>
-              <NoteForm onClose={toggleModal} />
-            </Modal>
-          )}
-          {notes.length > 0 && <NoteList notes={notes} />}
-        </section>
-      </main>
+      <header className={css.toolbar}>
+        <SearchBox onSearch={handleSearch} value={query} />
+        {data && data.totalPages > 1 && (
+          <Pagination
+            totalPages={data.totalPages}
+            currentPage={page}
+            onPageChange={setPage}
+          />
+        )}
+        <button onClick={handleOpenModal} className={css.button}>
+          Create note +
+        </button>
+      </header>
+      {data && data.notes.length > 0 ? (
+        <NoteList notes={data.notes} />
+      ) : (
+        data && <p>Nothing found</p>
+      )}
+      {isModalOpen && (
+        <Modal onClose={handleCloseModal}>
+          {" "}
+          <NoteForm onClose={handleCloseModal} />
+        </Modal>
+      )}
     </div>
   );
 }
+
+export default NotesClient;

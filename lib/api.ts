@@ -1,55 +1,60 @@
 import axios from "axios";
 import type { Note } from "../types/note";
 
-export type AllowedTag =
-  | "Todo"
-  | "Work"
-  | "Personal"
-  | "Meeting"
-  | "Shopping";
+axios.defaults.baseURL = "https://notehub-public.goit.study/api";
+const TOKEN = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
 
-export interface NotesResponse {
+interface FetchNotesResponse {
   notes: Note[];
   totalPages: number;
 }
 
-const api = axios.create({
-  baseURL: "https://notehub-public.goit.study/api",
-  headers: {
-    Authorization: `Bearer ${process.env.NEXT_PUBLIC_NOTEHUB_TOKEN}`,
-    "Content-Type": "application/json",
-  },
-});
+interface NewNote {
+  title: string;
+  content: string;
+  tag: string;
+}
 
-export const fetchNotes = async (
-  page = 1,
-  search = " "
-): Promise<NotesResponse> => {
-  const res = await api.get<NotesResponse>(`/notes`, {
-    params: {page, search, },
+export async function fetchNotes(
+  searchValue: string,
+  page: number
+): Promise<FetchNotesResponse> {
+  const { data } = await axios.get<FetchNotesResponse>("/notes", {
+    headers: {
+      Authorization: `Bearer ${TOKEN}`,
+    },
+    params: {
+      ...(searchValue !== "" && { search: searchValue }),
+      page,
+      perPage: 12,
+    },
   });
+  return data;
+}
 
-  return res.data;
-};
+export async function createNote(newNote: NewNote): Promise<Note> {
+  const { data } = await axios.post<Note>("/notes", newNote, {
+    headers: {
+      Authorization: `Bearer ${TOKEN}`,
+    },
+  });
+  return data;
+}
 
-export const createNote = async (
-  note: Omit<Note, "id" | "createdAt" | "updatedAt">
-): Promise<Note> => {
-  const res = await api.post<Note>("/notes", note);
-  return res.data;
-};
+export async function deleteNote(id: string): Promise<Note> {
+  const { data } = await axios.delete(`/notes/${id}`, {
+    headers: {
+      Authorization: `Bearer ${TOKEN}`,
+    },
+  });
+  return data;
+}
 
-export const updateNote = async (note: Note): Promise<Note> => {
-  const res = await api.put<Note>(`/notes/${note.id}`, note);
-  return res.data;
-};
-
-export const deleteNote = async (id: string): Promise<Note> => {
-  const res = await api.delete<Note>(`/notes/${id}`);
-  return res.data;
-};
-
-export const fetchNoteById = async (id: string): Promise<Note> => {
-  const response = await api.get<Note>(`/notes/${id}`);
-  return response.data;
-};
+export async function fetchNoteById(id: string): Promise<Note> {
+  const { data } = await axios.get(`/notes/${id}`, {
+    headers: {
+      Authorization: `Bearer ${TOKEN}`,
+    },
+  });
+  return data;
+}
