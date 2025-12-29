@@ -9,8 +9,7 @@ import SearchBox from '@/components/SearchBox/SearchBox';
 import Pagination from '@/components/Pagination/Pagination';
 import { fetchNotes } from '@/lib/api';
 import NoteForm from '@/components/NoteForm/NoteForm';
-
-import css from './page.module.css';
+import css from '../../components/NotesPage/NotesPage.module.css';
 
 export default function NotesClient() {
   const [currentPage, setCurrentPage] = useState(1);
