@@ -19,7 +19,7 @@ export default function NotesClient() {
 
   const { data } = useQuery({
     queryKey: ['notes', searchQuery, currentPage],
-    queryFn: () => fetchNotes({ searchText: searchQuery, page: currentPage }),
+    queryFn: () => fetchNotes(currentPage, searchQuery),
     placeholderData: keepPreviousData,
   });
 
@@ -37,7 +37,7 @@ export default function NotesClient() {
       <main>
         <section>
           <header className={css.toolbar}>
-            <SearchBox onSearch={changeSearchQuery} />
+            <SearchBox onSearch={changeSearchQuery} value={searchQuery}/>
             {totalPages > 1 && (
               <Pagination
                 totalPages={totalPages}
